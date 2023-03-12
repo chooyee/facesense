@@ -1,0 +1,6 @@
+pip install python-dotenv
+pip install opencv-python
+pip install Jinja2
+pip install Sanic
+pip install tensorflow
+pip install retina-face
