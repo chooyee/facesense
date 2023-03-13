@@ -4,7 +4,7 @@ from sanic.request import Request
 from sanic_ext import Extend
 from factory.face import detect, detectDnn, detectMTCNN
 from sanic.log import logger
-import os, time, datetime, logging
+import os, time, datetime, logging, base64
 
 from sanic.worker.manager import WorkerManager
 
@@ -47,7 +47,6 @@ async def typed_handler(request: Request) -> HTTPResponse:
     return text("Done.")
 
 @app.route("/face/v1/detect", methods=['POST'])
-
 async def facedetect(request):
     # uploadFolder = app.config['UPLOAD_FOLDER']
    
@@ -71,6 +70,57 @@ async def facedetect(request):
     logger.info("elapsed_time: " + str(elapsed_time))
     result["face"] = faceDetectResult
     result["id"] = id
+    result["elapsed_time"] = elapsed_time
+    return json(result)
+
+@app.route("/face/v1/detectjson", methods=['POST'])
+async def facedetectjson(request):
+    """
+    openapi:
+    ---
+    operationId: facedetectjson
+    requestBody:
+        description: "Mykad face detection"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                image:
+                  type: string
+                  format: base64
+              required:
+                - id
+                - image
+            example:
+              id: "Unique ID"
+              image: "base64 of image"
+   
+    responses:
+      '200':
+        description: json result
+    
+    """
+    result = {}
+    reqJson = request.json
+    
+    logger.info("id: " + reqJson["id"])
+    start_time = time.time()
+    bytes_data = base64.b64decode(reqJson["image"])
+    faceDetectResult = detectDnn(bytes_data)
+
+    if (len(faceDetectResult) < 2):
+        faceDetectResult2 = detectMTCNN(bytes_data)
+        if (len(faceDetectResult2) > len(faceDetectResult)):
+            faceDetectResult = faceDetectResult2
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    logger.info("elapsed_time: " + str(elapsed_time))
+    result["face"] = faceDetectResult
+    result["id"] = reqJson["id"]
     result["elapsed_time"] = elapsed_time
     return json(result)
 
