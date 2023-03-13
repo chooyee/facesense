@@ -6,7 +6,7 @@ from factory.face import detect, detectDnn, detectMTCNN
 from sanic.log import logger
 import os, time, datetime, logging
 
-# from sanic.worker.manager import WorkerManager
+from sanic.worker.manager import WorkerManager
 
 WELCOME_MESSAGE = r"""
 
@@ -28,7 +28,7 @@ LOGGING_CONFIG= logging.basicConfig(
             datefmt="%Y-%m-%d %I:%M:%S%p",
         )
         
-# WorkerManager.THRESHOLD = 100  # 这个值对应着 0.1s
+WorkerManager.THRESHOLD = 100  # 这个值对应着 0.1s
 
 app = Sanic(__name__, log_config=LOGGING_CONFIG)
 app.config.CORS_ORIGINS = "*"
@@ -87,4 +87,4 @@ async def write_to_file(uploadFolder, request):
 
 if __name__ == "__main__":
   
-    app.run(access_log=False)
+    app.run(host='0.0.0.0', port=8000)

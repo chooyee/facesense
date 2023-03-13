@@ -38,12 +38,19 @@ function fetchData(req) {
             console.log('Request succeeded with JSON response', data);
             return data
         }).catch(async function (error) {
-            console.log('Request failed', await error);
+            errMsg =  await error
+            console.log('Request failed', errMsg);
+            divResult.appendChild(CreateErrorMsgCard(errMsg))
+            btnUpload.disabled = false
         });
 }
 btnUpload.addEventListener('click', async (e)=>{
+    btnUpload.disabled = true
     var submit = MandatoryValidation()
-   
+    if (customFile.files.length < 1)
+    {
+        alert("Please select a file to upload!")
+    }
     if (submit)
     {
         // formElements.forEach(element => {   
@@ -61,6 +68,7 @@ btnUpload.addEventListener('click', async (e)=>{
             body: formData
         });
         result = await fetchData(req)
+        btnUpload.disabled = false
         divResult.appendChild(CreateCard(result))
         //console.log(result)
 
@@ -96,3 +104,21 @@ function CreateCard(result)
     return card
 }
 
+function CreateErrorMsgCard(result)
+{
+    const card = document.createElement('div');
+    card.classList.add("card")
+    const cardBody = document.createElement('div');
+    cardBody.classList.add("card-body")
+    const cardTitle = document.createElement('h5');
+    cardTitle.innerHTML = `An Unexpected Error`
+    cardTitle.classList.add("card-title")
+    const cardContent = document.createElement('p');
+    cardContent.innerHTML = `${result}`
+
+   
+    cardBody.appendChild(cardTitle)
+    cardBody.appendChild(cardContent)
+    card.appendChild(cardBody)
+    return card
+}

@@ -34,8 +34,8 @@ def detectMTCNN(image_data):
                 faceObj["base64"] = base64_face
                 cropped_faces.append(faceObj)
 
-                cropped_path = f'{path}/{filename}-cropped-{str(icnt)}.jpg'
-                cv2.imwrite(cropped_path, cropped_face)
+                # cropped_path = f'{path}/{filename}-cropped-{str(icnt)}.jpg'
+                # cv2.imwrite(cropped_path, cropped_face)
                 icnt+=1   
         return cropped_faces
     except Exception as e:
@@ -76,9 +76,8 @@ def detect(image_data):
                 faceObj["base64"] = base64_face
                 cropped_faces.append(faceObj)
                 
-                #path, filename_without_ext, ext = getFilePath(faceImage)
-                cropped_path = f'{path}/{filename}-cropped-{str(i)}.jpg'
-                cv2.imwrite(cropped_path, face)
+                #cropped_path = f'{path}/{filename}-cropped-{str(i)}.jpg'
+                #cv2.imwrite(cropped_path, face)
                 #save_image_async(face, cropped_path)
                 i += 1
         return cropped_faces
@@ -123,9 +122,9 @@ def detectDnn(image_data):
                     faceObj["base64"] = base64_face
                     cropped_faces.append(faceObj)
 
-                    cropped_path = f'{path}/{filename}-cropped-{str(icnt)}.jpg'
+                    # cropped_path = f'{path}/{filename}-cropped-{str(icnt)}.jpg'
                     # cv2.imwrite(cropped_path, face)
-                    write_to_file(cropped_path, face)
+                    #write_to_file(cropped_path, face)
                     icnt+=1   
         logger.info(f'Face found: {icnt-1}')        
         return cropped_faces
